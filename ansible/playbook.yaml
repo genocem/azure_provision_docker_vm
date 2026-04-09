@@ -1,0 +1,5 @@
+- name: setting up docker vm
+  hosts: all
+  become: true
+  roles:
+    - setup

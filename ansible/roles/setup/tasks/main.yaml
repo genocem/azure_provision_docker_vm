@@ -1,0 +1,33 @@
+- name: Update apt cache and upgrade all packages
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: dist
+    cache_valid_time: 3  # Only update if the last update was > 1 hour ago
+  become: true
+
+- name: Install Docker engine and Compose plugin
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - docker-compose-v2
+    state: present
+  become: true
+
+- name: Ensure docker group exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+  become: true
+
+- name: Add SSH user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user | default(ansible_user_id) }}"
+    groups: docker
+    append: true
+  become: true
+
+- name: installing git
+  ansible.builtin.apt: 
+    name: git
+    state: present
+  become: true
